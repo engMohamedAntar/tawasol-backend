@@ -5,7 +5,7 @@ require('dotenv').config();
 const app= express();
 app.use(express.json());
 
-connectDB(); 
+connectDB();  
 
 app.use('/api/auth', require('./routes/authRoute'));
 app.use('/api/posts', require('./routes/postsRoute'));
