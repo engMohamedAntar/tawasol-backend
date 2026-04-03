@@ -3,7 +3,9 @@ const connectDB = require('./config/dbConnection');
 require('dotenv').config();
 
 const app= express();
-connectDB();
+app.use(express.json());
+
+connectDB(); 
 
 app.use('/api/auth', require('./routes/authRoute'));
 app.use('/api/posts', require('./routes/postsRoute'));
