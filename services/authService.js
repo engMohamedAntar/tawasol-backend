@@ -54,6 +54,6 @@ exports.protect = async (req, res, next) => {
       .send({ errors: [{ msg: "No user found for this token" }] });
 
   req.user = user;
-
+  
   next();
 };
