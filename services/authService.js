@@ -44,7 +44,12 @@ exports.protect = async (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
 
   // verify token (not expired and valid)
-  const decoded = jwt.verify(token, process.env.JWT_SECRET); //?
+  let decoded;
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET); //?
+  } catch (error) {
+    return res.status(401).send({ errors: [{ msg: "Unauthorized" }] });
+  }
 
   // ensure that the user still exit
   const user = await User.findById(decoded.id);
@@ -54,6 +59,6 @@ exports.protect = async (req, res, next) => {
       .send({ errors: [{ msg: "No user found for this token" }] });
 
   req.user = user;
-  
+
   next();
 };

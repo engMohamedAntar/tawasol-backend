@@ -1,20 +1,9 @@
 //profileService.js
 const Profile = require("../models/Profile");
+const User = require("../models/User");
 const normalizeUrl = require("normalize-url");
+
 exports.createProfile = async (req, res) => {
-  /*
-    {
-        "company": “ARAMEX”,
-        “status”: “Junior Developer”,
-        “skills”: [”HTML, CSS, PHP, JAVASCRIPT”],
-        “website”: ”https://www.mywebsite.com“,
-        “location”:”Dubai”,
-        “bio”:”I am a software engineer and studied in the Arabic university”,
-        “github”:””,
-        “twitter”:””,
-        “youtube”:””
-    }
-*/
   const {
     skills,
     website,
@@ -60,4 +49,38 @@ exports.createProfile = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+}; 
+
+exports.getMyProfile = async (req, res) => {
+  const profile = await Profile.findOne({ user: req.user.id }).populate('user', ['name']);
+  if(!profile)
+    return res.status(404).json({ error: "Profile not found" }); 
+  
+  res.status(200).json({ profile }); 
 };
+
+exports.getProfiles = async (req, res) => {
+  const profiles = await Profile.find().populate('user', ['name']);
+  res.status(200).json({ profiles });
+}; 
+
+exports.getUserProfile = async (req, res) => {
+
+  const profile = await Profile.findOne({ user: req.params.user_id }).populate('user', ['name']);
+  if(!profile)
+    return res.status(404).json({ error: "Profile not found" });
+  res.status(200).json({ profile });
+}; 
+
+exports.deleteProfile = async (req, res) => {
+  //delete User
+  //delete Posts
+  //delete Profile
+  await Promise.all([
+    // ToDo: delete posts
+    Profile.findOneAndDelete({ user: req.user.id }),
+    User.findByIdAndDelete(req.user.id),
+  ]);
+
+  res.status(200).json('User info deleted successfully');
+}; 

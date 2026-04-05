@@ -1,8 +1,8 @@
 const express = require("express");
-const { createProfile } = require("../services/profileService");
+const { createProfile, getMyProfile, getProfiles, getUserProfile, deleteProfile } = require("../services/profileService");
 const { createProfileValidator } = require("../validators/profileValidator");
 const { protect } = require("../services/authService");
-const addUserToReqBody = require("../middlewares/addUserToReqBody");
+const  addUserToReqBody= require("../middlewares/addUserToReqBody");
 const router = express.Router();
 /*
 1.  POST /profiles
@@ -24,5 +24,11 @@ router.post(
   createProfileValidator,
   createProfile,
 );
+
+router.get("/me", protect, getMyProfile);
+router.get("/", protect, getProfiles);
+router.get("/user/:user_id", protect, getUserProfile);
+
+router.delete("/", protect, deleteProfile);
 
 module.exports = router;

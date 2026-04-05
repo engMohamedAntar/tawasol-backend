@@ -1,4 +1,6 @@
-module.exports = (req, res, next) => {
+module.exports= (req, res, next) => {
     req.body.user = req.user.id;
     next();
 };
+
+
