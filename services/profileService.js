@@ -98,3 +98,35 @@ exports.uploadImage = (req, res) => {
     return res.status(200).send(req.file);
   });
 };
+
+exports.createExperience = async (req, res) => {
+  const profile = await Profile.findOne({ user: req.user.id });
+  profile.experience.unshift(req.body);
+  await profile.save();
+  res.status(201).json(profile);
+};
+
+exports.createEducation = async (req, res) => {
+  const profile = await Profile.findOne({ user: req.user.id });
+  profile.education.unshift(req.body);
+  await profile.save();
+  res.status(201).json(profile);
+};
+
+exports.deleteExperience = async (req, res) => {
+  const profile = await Profile.findOneAndUpdate(
+    { user: req.user.id },
+    { $pull: { experience: { _id: req.params.exp_id } } },
+    { returnDocument: "after" },
+  );
+  res.status(200).json(profile);
+};
+
+exports.deleteEducation = async (req, res) => {
+  const profile = await Profile.findOneAndUpdate(
+    { user: req.user.id },
+    { $pull: { education: { _id: req.params.edu_id } } },
+    { returnDocument: "after" },
+  );
+  res.status(200).json(profile);
+};

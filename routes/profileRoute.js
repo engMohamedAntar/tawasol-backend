@@ -5,9 +5,19 @@ const {
   getProfiles,
   getUserProfile,
   deleteProfile,
-  uploadImage
+  uploadImage,
+  createExperience,
+  deleteExperience,
+  createEducation,
+  deleteEducation,
 } = require("../services/profileService");
-const { createProfileValidator } = require("../validators/profileValidator");
+const {
+  createProfileValidator,
+  createExperienceValidator,
+  createEducationValidator,
+  deleteEducationValidator,
+  deleteExperienceValidator,
+} = require("../validators/profileValidator");
 const { protect } = require("../services/authService");
 const addUserToReqBody = require("../middlewares/addUserToReqBody");
 const upload = require("../utils/upload");
@@ -40,9 +50,24 @@ router.get("/user/:user_id", protect, getUserProfile);
 router.delete("/", protect, deleteProfile);
 
 // router.post("/upload", protect, uploadImage);
-router.post("/upload", protect, upload, (req,res)=>{
+router.post("/upload", protect, upload, (req, res) => {
   res.status(201).json(req.file);
 });
 
+router.put("/experience", protect, createExperienceValidator, createExperience);
+router.delete(
+  "/experience/:exp_id",
+  protect,
+  deleteExperienceValidator,
+  deleteExperience,
+);
+
+router.put("/education", protect, createEducationValidator, createEducation);
+router.delete(
+  "/education/:edu_id",
+  protect,
+  deleteEducationValidator,
+  deleteEducation,
+);
 
 module.exports = router;
