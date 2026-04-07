@@ -3,6 +3,7 @@ const Profile = require("../models/Profile");
 const User = require("../models/User");
 const normalizeUrl = require("normalize-url");
 const upload = require("../utils/upload");
+const Post = require("../models/Post");
 
 exports.createProfile = async (req, res) => {
   const {
@@ -79,13 +80,10 @@ exports.getUserProfile = async (req, res) => {
 };
 
 exports.deleteProfile = async (req, res) => {
-  //delete User
-  //delete Posts
-  //delete Profile
   await Promise.all([
-    // ToDo: delete posts
-    Profile.findOneAndDelete({ user: req.user.id }),
     User.findByIdAndDelete(req.user.id),
+    Post.deleteMany({ user: req.user.id }),
+    Profile.findOneAndDelete({ user: req.user.id }),
   ]);
 
   res.status(200).json("User info deleted successfully");
